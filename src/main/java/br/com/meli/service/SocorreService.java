@@ -2,7 +2,7 @@ package br.com.meli.service;
 
 import br.com.meli.entity.Veiculo;
 
-public interface SocorreService {
+public interface SocorreService<T extends Veiculo> {
 
-    void socorrer(Veiculo veiculo);
+    void socorrer(T veiculo);
 }

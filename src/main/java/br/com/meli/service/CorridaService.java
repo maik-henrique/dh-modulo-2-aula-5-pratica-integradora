@@ -7,14 +7,13 @@ import br.com.meli.entity.Veiculo;
 import lombok.Builder;
 
 
-import java.util.Optional;
 
 @Builder
 public class CorridaService {
 
-    private Corrida corrida;
-    private SocorreService socorreCarroService;
-    private SocorreService socorreMotoService;
+    private final Corrida corrida;
+    private final SocorreService<Carro> socorreCarroService;
+    private final SocorreService<Moto> socorreMotoService;
 
     public void adicionarVeiculo(Veiculo veiculo) {
         corrida.getVeiculos().add(veiculo);
@@ -30,20 +29,19 @@ public class CorridaService {
 
     public void socorrer(Veiculo veiculo) {
         if (veiculo instanceof Carro)
-            socorreCarroService.socorrer(veiculo);
+            socorreCarroService.socorrer((Carro) veiculo);
 
         if (veiculo instanceof Moto)
-            socorreMotoService.socorrer(veiculo);
+            socorreMotoService.socorrer((Moto) veiculo);
     }
 
     public Veiculo getVencedor() {
-        Optional<Veiculo> vencedor = corrida.getVeiculos().stream().max((a, b) -> {
+        Veiculo veiculo = corrida.getVeiculos().stream().max((a, b) -> {
             double pontuacaoA = calcularPontuacao(a);
             double pontuacaoB = calcularPontuacao(b);
             return Double.compare(pontuacaoA, pontuacaoB);
-        });
-
-        return vencedor.get();
+        }).get();
+        return veiculo;
     }
 
     public void imprimirCompetidores() {
